@@ -1,0 +1,64 @@
+<fieldset id='basic_metadata'>
+  <legend>Basic Metadata</legend>
+
+  <% if flash[:errors] %>
+  <div class="alert alert-error"><%= flash[:errors] %></div
+  <% end %>
+  
+<%= form_tag video_path(params[:id]), 
+  :method => "put", 
+  :class => "form-horizontal", 
+  id: 'basic_metadata_form' do -%>
+  <%= hidden_field_tag 'pid', @video.pid %>
+  <%= hidden_field_tag 'step', 'basic_metadata' %>
+  
+  <div id="title-field" class="control-group">
+    <div class="control-label">
+      <%= label_tag 'metadata_title', "Title" %>
+      <p class="information">Required</p>
+    </div>
+    <div class="controls">
+      <%= text_field_tag 'metadata_title', @video.descMetadata.title, required: true %>
+    </div>
+  </div>
+
+  <div id="creator-field" class="control-group">
+    <div class="control-label">
+      <%= label_tag 'metadata_creator', "Creator" %>
+      <p class="information">Required</p>
+    </div>
+    <div class="controls">
+      <%= text_field_tag 'metadata_creator', @video.descMetadata.creator, required: true %>
+    </div>
+  </div>
+
+  <div id="createdon-field" class="control-group">
+    <div class="control-label">
+      <%= label_tag 'metadata_createdon', "Created on" %>
+      <p class="information">Required</p>
+    </div>
+    <div class="controls">
+      <%= text_field_tag 'metadata_createdon', @video.descMetadata.created_on, required: true %>
+    </div>
+  </div>
+  
+  <div id="abstract-field" class="control-group">
+    <div class="control-label">
+      <%= label_tag 'metadata_abstract', "Summary" %>
+    </div>
+    <div class="controls">
+      <%= text_area_tag 'metadata_abstract', @video.descMetadata.abstract[0], 
+        rows: 10 %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <%= link_to "Back to file upload", 
+          video_path(@video, step: 'file_upload'), 
+          id: "previous_screen", class: "btn", name: "previous_screen" %>
+      <%= submit_tag "Save and finish", class: 'btn', id: 'next_screen' %>
+    </div>
+  </div>
+<%- end -%>
+</fieldset>

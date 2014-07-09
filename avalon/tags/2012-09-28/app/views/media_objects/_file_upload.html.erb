@@ -1,0 +1,106 @@
+<fieldset id='uploader'>
+    <legend>Manage file(s)</legend>
+    <p>Choose the bitstreams that are part of this resource. Once files are uploaed you can edit the labels before continuing to the next step.</p>
+
+  	<p>Uploaded files must not exceed <%= number_to_human_size MasterFile::MAXIMUM_UPLOAD_SIZE %></p>
+
+    <%= form_tag(master_files_path, :enctype=>"multipart/form-data", class: "uploader-form form-horizontal step") do -%>
+      <input type="hidden" name="container_id" value="<%=h container_id %>"/>
+      <input type="hidden" name="step" value="file_upload"/>
+
+      <%= hidden_field_tag("container_content_type", container_content_type, :id => "file_upload_content_type") if defined?(container_content_type) %>
+
+      <%- field_tag_options = defined?(uploader_options) ? uploader_options : {id: nil, multiple: true} %>
+
+      <%= file_field_tag "Filedata[]", field_tag_options %>
+      <%= submit_tag("Upload file", :name=>"upload_file", class: "btn") %>
+
+      <%= hidden_field_tag(:new_asset, true, :id => "files_new_asset") if params[:new_asset] %>
+      <%= hidden_field_tag("id",params[:id], :id => "file_upload_id") if params[:id] %>
+      <%= hidden_field_tag(:original, params[:original], :id => "files_original") %>
+    <% end %>
+    
+	  <% unless @masterFiles.blank? %>
+
+      <%= twitter_bootstrap_form_for @mediaobject do |upload_form| %>
+      <%= hidden_field_tag :donot_advance, true %>
+      <%= hidden_field_tag :step, 'file-upload' %>
+      
+	  <table class="table table-striped">
+	    <colgroup>
+	      <col class="span1">
+	      <col class="span4">
+	      <col class="span4">
+	      <col class="span1">
+	      <col class="span1">
+	    </colgroup>
+	    
+        <thead>
+          <th></th>
+          <th>Type</th>
+          <th>Title</th>
+          <th>File name</th>
+          <th>Size</th>
+          <th>Delete</th>
+        </thead>
+		    <tbody>
+		    <% @masterFiles.each do |part, i| %>
+      		  <%= hidden_field_tag "parts[#{i}][pid]", part.pid  %>
+  		      <tr>
+							<td>
+								<div class="noshow">
+									<i class="icon-arrow-up"></i>
+									<i class="icon-arrow-down"></i> 
+								</div>
+							</td>
+  		        <td>
+  		          <% case part.media_type.first
+  		             when 'Sound' %>
+	    		       <i class="icon-volume-up"></i>
+  		          <% when 'Moving image' %>
+	    		       <i class="icon-film"></i>
+	    		  <% else %>
+			       <i class="icon-question-sign"></i>
+  		          <% end %>
+  		        </td>
+  		        <td>
+      		      <%= text_field_tag "parts[#{i}][label]", part.label, size: 30 %>
+  		        </td>
+  		        <td>
+  		          <%= link_to truncate(File.basename(part.url.first), length: 25), part.descMetadata.identifier[0], target: '_download' %>
+      	  	  </td>
+      	  	  <td>
+      	  	    <strong><%= number_to_human_size(part.size.first) %></strong>
+      	  	  </td>
+      	  	  <td>
+      	  	   <% if can? :edit, @mediaobject %>
+      	 	     <!-- This should be refactored to act more in line with the typical Twitter bootstrap code at some point -->
+          	 		 <%# On a Rails level this needs to be folded into the masterfiles
+          	 		   # controller's destroy method to help remove more vestiges of the
+          	 		   # catalog controller %>
+         	         <%= check_box_tag "parts[#{i}][remove]", true %>
+        	 	    <% end %>
+      	 	    </td>
+    	 	    </tr>
+    	 	    <% end %>
+  	 	  </tbody>
+  	 	</table>
+  <%= upload_form.submit "Update", donot_advance: true %>
+</fieldset>
+<% end %>
+<% end %>
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= twitter_bootstrap_form_for @mediaobject, html: { class: "form-horizontal"} do |vid| %>
+      <%= render "workflow_buttons", form: vid %>
+    <% end %>		
+  </div>
+</div>
+
+<% content_for :page_scripts do %>
+  <script>
+    /* Hide the alert dialog on the page loading if Javascript is enabled */
+    <% unless flash[:upload] %>$('#upload_format').hide();<% end %>
+  </script>
+<% end %>

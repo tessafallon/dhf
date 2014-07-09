@@ -1,0 +1,15 @@
+Avalon Media System feedback
+
+A @comment has been recieved from the system
+========================================
+FROM
+<%= @comment.name %> (<<%= @comment.email %>>)
+
+SUBJECT
+<%= @comment.subject %>
+
+COMMENT
+<%= @comment.comment %>
+
+TIME SENT
+<%= DateTime.now %>

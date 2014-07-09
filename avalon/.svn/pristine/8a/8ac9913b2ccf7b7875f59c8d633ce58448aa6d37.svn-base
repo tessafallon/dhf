@@ -1,0 +1,25 @@
+<div class="row-fluid">
+  <div class="span3" id="left_column">
+    <% if can? :edit, @video %>
+    <%= render "conversion_status", video_assets: @video_assets %>
+    <%= render "withdraw_object", video: @video %>
+    <% end %>
+  </div>
+
+  <div id="main_body" class="offset1 span7">
+    <div id="permalink" class="alert alert-success">
+      <h4 class="alert-heading">Permalink</h4>
+      <p>To share this resource with others use the following canonical link</p>
+      <address><%= link_to video_url(@video.pid) %></address>
+    </div>
+    
+    <% unless @video.descMetadata.title.empty? %>
+      <div class="page-header">
+        <h2><%= @video.descMetadata.title[0] %></h2>
+      </div>
+    <% end %>
+    
+    <section id="player"><%= render "modules/video_player" %></section>
+    
+    <section id="metadata"><%= render "modules/metadata_display" %></section>
+</div>

@@ -1,0 +1,9 @@
+[submodule "jetty"]
+	path = jetty
+	url = git://github.com/projecthydra/hydra-jetty.git
+[submodule "felix"]
+	path = felix
+	url = git://github.com/variations-on-video/hydrant-felix.git
+[submodule "red5"]
+	path = red5
+	url = git://github.com/variations-on-video/hydrant-red5.git

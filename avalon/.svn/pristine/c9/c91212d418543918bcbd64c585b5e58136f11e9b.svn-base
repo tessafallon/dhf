@@ -1,0 +1,142 @@
+<% if flash[:error].present? %>
+  <ul class='unstyled alert alert-error' style='display: inline-table;'>
+    <%= Array(flash[:error]).collect { |error| content_tag(:li,error) }.join('').html_safe %>
+  </ul>
+<% end %>
+
+<% unless @masterFiles.empty? %>
+<section id="associated_files">
+      <legend>Associated files</legend>
+      <p class="muted">For items with multiple files, provide display labels for each file. Changes will be saved when you select Update.</p>
+	  <hr />
+      <%= twitter_bootstrap_form_for @mediaobject do |file_list| %>
+      <%= hidden_field_tag :donot_advance, true %>
+      <%= hidden_field_tag :step, 'file-upload' %>
+      
+	  <table class="table table-striped">
+	    <colgroup>
+	      <col class="span1">
+	      <col class="span4">
+	      <col class="span4">
+	      <col class="span1">
+	      <col class="span1">
+	    </colgroup>
+	    
+        <thead>
+          <th></th>
+          <th>Type</th>
+          <th>Display label</th>
+          <th>Poster offset</th>
+          <th>File name</th>
+          <th>Size</th>
+          <th>Delete</th>
+        </thead>
+		    <tbody>
+		    <% @masterFiles.each do |part| %>
+      		  <%= hidden_field_tag "parts[#{part.pid}][pid]", part.pid  %>
+  		      <tr>
+                        <td>&nbsp;</td>
+  		        <td>
+  		          <% case part.file_format
+  		             when 'Sound' %>
+	    		       <i class="icon-volume-up"></i>
+  		          <% when 'Moving image' %>
+	    		       <i class="icon-film"></i>
+	    		  <% else %>
+			       <i class="icon-question-sign"></i>
+  		          <% end %>
+  		        </td>
+  		        <td>
+      		      <%= text_field_tag "parts[#{part.pid}][file_label]", part.file_label, size: 30 %>
+  		        </td>
+              <td>
+                <% if part.is_video? %>
+                  <%= text_field_tag "parts[#{part.pid}][poster_offset]", part.poster_offset.to_i.to_hms, size: 8, class: "input-small" %>
+                <% else %>
+                  <%= content_tag(:span, part.poster_offset.to_i.to_hms, size: 8, class: "input-small uneditable-input") %>
+                <% end %>
+              </td>
+  		        <td>
+  		          <%= truncate(File.basename(part.file_location), length: 25) %>
+      	  	  </td>
+      	  	  <td>
+      	  	    <strong><%= number_to_human_size(part.file_size) %></strong>
+      	  	  </td>
+      	  	  <td>
+      	  	   <% if can? :edit, @mediaobject %>
+      	 	     <!-- This should be refactored to act more in line with the typical Twitter bootstrap code at some point -->
+          	 		 <%# On a Rails level this needs to be folded into the masterfiles
+          	 		   # controller's destroy method to help remove more vestiges of the
+          	 		   # catalog controller %>
+         	         <%= check_box_tag "parts[#{part.pid}][remove]", true %>
+        	 	    <% end %>
+      	 	    </td>
+    	 	    </tr>
+    	 	    <% end %>
+  	 	  </tbody>
+  	 	</table>
+  <%= submit_tag "Update", class: "btn", donot_advance: true %>
+<% end %>
+  </section>
+<% end %>
+
+<section id="web_upload">
+  <fieldset id='uploader'>
+    <legend>Upload through the web</legend>
+    <p class="muted">Uploaded files must not exceed <%= number_to_human_size MasterFile::MAXIMUM_UPLOAD_SIZE %></p>
+
+      <%= form_tag(master_files_path, :enctype=>"multipart/form-data", class: "uploader-form form-horizontal step") do -%>
+        <input type="hidden" name="container_id" value="<%=h @mediaobject.pid %>"/>
+        <input type="hidden" name="step" value="file_upload"/>
+
+        <%= hidden_field_tag("container_content_type", container_content_type, :id => "file_upload_content_type") if defined?(container_content_type) %>
+
+        <%- field_tag_options = defined?(uploader_options) ? uploader_options : {multiple: true} %>
+
+        <div class="fileupload fileupload-new" data-provides="fileupload">
+          <div class="input-append">
+            <div class="uneditable-input span3">
+              <i class="icon-file fileupload-exists"></i>
+              <span class="fileupload-preview"></span>
+            </div>
+            <%= button_tag "Upload", name: "upload_file", class: "btn fileupload-exists" %>
+            <span class="btn btn-file">
+              <span class="fileupload-new">Select</span>
+              <span class="fileupload-exists">Change</span>
+              <%= file_field_tag "", field_tag_options %>
+            </span>
+            <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+          </div>
+        </div>
+        
+        <%= hidden_field_tag(:new_asset, true, :id => "files_new_asset") if params[:new_asset] %>
+        <%= hidden_field_tag("id",params[:id], :id => "file_upload_id") if params[:id] %>
+        <%= hidden_field_tag(:original, params[:original], :id => "files_original") %>
+      <% end %>
+  </fieldset>
+</section>
+
+<section id="dropbox_upload">
+  <legend id="dropbox_modal_label">Import from a dropbox</legend>
+  <p class="muted">Use the dropbox to import large files. Attach selected files after uploading. Files will be begin processing when you click Save and continue.</p>
+  <p><a class="btn dropbox-trigger" href="#">Open Dropbox</a></p>
+  <%= render partial: "dropbox_details" %>
+  <%= render partial: 'dropbox' %>
+</section>
+
+
+<%= twitter_bootstrap_form_for @mediaobject, html: { class: "form-horizontal"} do |media| %>
+  <%= render "workflow_buttons", form: media %>
+<% end %>		
+
+<% content_for :page_styles do %>
+  <%= stylesheet_link_tag "jasny-bootstrap.min", media: "all" %>
+<% end %>
+
+<% content_for :page_scripts do %>
+  <%= javascript_include_tag "bootstrap-fileupload" %>
+  <script>
+    /* Hide the alert dialog on the page loading if Javascript is enabled */
+    <% unless flash[:upload] %>$('#upload_format').hide();<% end %>
+  </script>
+<% end %>

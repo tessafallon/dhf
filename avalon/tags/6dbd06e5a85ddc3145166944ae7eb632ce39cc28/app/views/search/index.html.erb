@@ -1,0 +1,24 @@
+<section id="facets"><%= render 'facets' %></section>
+
+<section id="search_results">
+  <div class="page-header">
+  <% if params[:q] %>
+    <h2>Search results for keywords "<em><%= params[:q] %></em>"</h2>
+  <% else %>
+    <h2>Collection browse</h2>
+  <% end %>
+  </div>
+
+  <div class="row">
+  <div class="span10">
+    <% unless @document_list.empty? %>
+      <ul class="thumbnails">
+        <%= render partial: 'search_result', collection: @document_list, as: :item %>      
+      </ul>
+      <% else %>
+        <strong>No results were found. Try a different search term.</strong>
+      <% end %>
+    </div>
+  </div>
+</section>
+

@@ -34,7 +34,7 @@
   platforms :ruby do
     gem 'sqlite3'
     gem 'execjs'
-    gem 'therubyracer', '= 0.10.2'
+    gem 'therubyracer'
   end
 
   gem 'avalon-about', git: "https://github.com/avalonmediasystem/avalon-about.git", tag: 'avalon-r3'
@@ -90,10 +90,8 @@
     gem 'rspec-rails', '>=2.9.0'
     gem 'pry'
     gem 'pry-rails'
-    gem 'pry-debugger'
     gem 'puma'
     gem 'rb-fsevent', '~> 0.9.1'
-    gem 'debugger'
     gem 'letter_opener'
     gem 'grit'
     gem 'license_header'

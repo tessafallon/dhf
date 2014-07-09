@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title><%= yield :title %>
+       <% if content_for? :title %>- <% end %><%=release_text%>
+    </title>
+
+   <%= csrf_meta_tags %>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%= stylesheet_link_tag "application", media: "all" %>
+    <%= yield :page_styles %>
+    <%= yield :additional_head_content %>
+  </head>
+
+  <body>
+    <%= render 'modules/header' %>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <%= render "modules/global_navigation" %>
+      </div>
+    </div>
+    
+    <div class="container-fluid"><%= yield %></div>
+    <%= render 'modules/footer' %>
+
+    <!-- With this many Javascript files performance will be much better
+         if they are included here. That means the important content will
+         load first; the page will not gag on trying to pull down files
+         from a CDN -->
+    <%= javascript_include_tag "application" %>
+    <%= yield :page_scripts %>
+  </body>
+</html>

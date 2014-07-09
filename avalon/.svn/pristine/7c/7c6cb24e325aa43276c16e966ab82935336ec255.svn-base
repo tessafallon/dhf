@@ -1,0 +1,63 @@
+<% if flash[:upload] %>
+<div id="upload_format" class="alert active">
+<p class="notice"><%= flash[:upload] %></p>
+</div>
+<% end %>
+
+	<% if not @video.nil? and can? :edit, @video %> 
+  	  <fieldset id='uploader'>
+   		<legend>File Upload</legend>
+		<% unless @video_asset.nil? %>
+	  	   <a href="<%= @video_asset.descMetadata.identifier[0]%>"><%= @video_asset.descMetadata.title[0] %> 
+                   <strong>(<%= number_to_human_size(@video_asset.size) %>)</strong>
+                   </a>
+	  	   <% if can? :edit, @video %>
+	 	     <!-- This should be refactored to act more in line with the typical
+	 			Twitter bootstrap code at some point -->
+	 		 <% # On a Rails level this needs to be folded into the video_assets
+	 		    # controller's destroy method to help remove more vestiges of the
+	 		    # catalog controller %>
+	         <%= button_to("Delete file", 
+	           video_asset_path(@video_asset.id), 
+	           :data => { :confirm => "Are you sure you want to delete this file?" }, 
+	           :method => :delete, 
+	           :class => "delete-button btn") %>
+	 	   <% end %>
+		<% else %>
+	      <%= form_tag(video_assets_path, :enctype=>"multipart/form-data", class: "uploader-form form-horizontal step") do -%>
+	      <input type="hidden" name="container_id" value="<%=h container_id %>"/>
+	      <input type="hidden" name="step" value="file_upload"/>
+	      
+	      <%= hidden_field_tag("container_content_type", container_content_type, :id => "file_upload_content_type") if defined?(container_content_type) %>
+
+          <%- field_tag_options = defined?(uploader_options) ? uploader_options : {:id => nil} %>
+          <div class="uploader-contents">
+            <div class="control-label">File</div>
+            <div class="controls"><%= file_field_tag "Filedata[]", field_tag_options %></div>
+            </div>	      	    
+                
+            <%= hidden_field_tag(:new_asset, true, :id => "files_new_asset") if params[:new_asset] %>
+	      	<%= hidden_field_tag("id",params[:id], :id => "file_upload_id") if params[:id] %>
+	      	<%= hidden_field_tag(:original, params[:original], :id => "files_original") %>
+	      	
+	      	<div class="control-group">
+	      	  <div class="controls"><%= submit_tag("Upload file", :name=>"upload_file", class: "btn") %></div>
+	      	</div>
+	     <% end %>
+	     <% end %>
+  	  </fieldset>
+<% end %>
+
+<div class="row-fluid">
+  <div class="span8">
+    <%= link_to "Continue to basic metadata", edit_video_path(@video, step: 'basic_metadata'), class: "btn" %>
+    <%= link_to "Return to preview", video_path(@video), class: 'btn' %>
+  </div>
+</div>
+
+<% content_for :page_scripts do %>
+<script>
+  /* Hide the alert dialog on the page loading if Javascript is enabled */
+  <% unless flash[:upload] %>$('#upload_format').hide();<% end %>
+</script>
+<% end %>

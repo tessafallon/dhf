@@ -1,0 +1,44 @@
+<div class="row-fluid">
+  <div class="span2" id="left_column">
+    <%= render "ingest_steps" %>
+    <%= render "remove_item" %>
+  </div>
+  
+  <div id="main_body" class="span10">
+
+  <% if flash[:errors] %>
+    <div id="errors_information" class="alert alert-error active">
+     <% if flash[:errors].is_a?(Array) 
+       flash[:errors].each do |err| %>
+       <p class="notice"><%= err %></p>
+     <% end %>
+     <% else %>
+       <p> class="notice"><%= flash[:errors] %></p>
+     <% end %>
+  </div>
+  <% end %>
+
+  <% if flash[:upload] and not flash[:errors] %>
+    <div id="upload_format" class="alert active">
+      <p class="notice"><%= flash[:upload] %></p>
+    </div>
+  <% end %>
+
+  
+  <%= render current_step_for @active_step %>
+
+<!--     <div id="permalink" class="alert alert-success">
+      <h4 class="alert-heading">Permalink</h4>
+      <p>To share this item with others use the following canonical link</p>
+      <address><%= link_to media_object_url(params[:id]), media_object_url(params[:id]) %></address>
+    </div> -->
+</div>
+
+<% content_for :title do %>
+  Edit -
+  <% unless @mediaobject.title.blank? %>
+    <%= @mediaobject.title %> (<%= @mediaobject.pid %>)
+  <% else %>
+    <%= @mediaobject.pid %>
+  <% end %>
+<% end %>

@@ -1,0 +1,20 @@
+class NotificationsMailer < ActionMailer::Base
+  default from: Avalon::Configuration.lookup('email.notification')
+
+  def new_collection( args = {} )
+    @collection = Admin::Collection.find(args.delete(:collection_id))
+    @creator    = User.find(args.delete(:creator_id))
+    @to         = User.find(args.delete(:user_id)) 
+    args.each{|name, value| self.instance_variable_set("@#{name}", value)}
+    mail(to: @to.email, subject: @subject)
+  end
+
+  def update_collection( args = {})
+    @collection = Admin::Collection.find(args.delete(:collection_id))
+    @updater    = User.find(args.delete(:updater_id))
+    @to         = User.find(args.delete(:user_id)) 
+    args.each{|name, value| self.instance_variable_set("@#{name}", value)}
+    mail(to: @to.email, subject: @subject)
+  end
+
+end

@@ -1,0 +1,16 @@
+<!-- Run LINT on this later to clean up the formatting -->		
+<div id="workflow_status" class="alert">
+  <h4 class="alert-heading">Conversion status</h4>
+  <p id="file_status">
+    <% unless files.empty? %>
+      <dl class="nobullet status">
+        <% files.each do |file| %>
+        <dt><%= file["title_t"][0] %></dt>
+        <dd><%= file["description_t"][0] %></dd>
+        <% end %>
+      </dl>
+    <% else %>
+      No file(s) have been loaded
+    <% end %>  
+  </p>
+</div>

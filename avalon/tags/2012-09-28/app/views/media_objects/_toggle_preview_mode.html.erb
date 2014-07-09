@@ -1,0 +1,18 @@
+<% if @ingest_status.published %>
+<div class="alert">
+  <h4 class="alert-heading">Return to preview</h4>
+  <%= link_to "Return to preview", media_object_path(@mediaobject), 
+    class: "btn" %>	
+</div>
+<% else %>
+<div class="alert alert-error">
+  <h4 class="alert-heading">Cancel ingest</h4>
+  <p>Stop the ingest process and remove the resource from the system</p>
+  <%= button_to("Delete item", {:action => :destroy, 
+      :controller => :"media_objects", 
+      :id => @mediaobject.pid}, 
+    :data => { :confirm => 'Are you sure?' },
+    :method => :delete, 
+    class: "btn" )%>
+</div>
+<% end %>

@@ -1,0 +1,50 @@
+<%#
+Copyright 2011-2013, The Trustees of Indiana University and Northwestern
+  University.  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed 
+  under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+  specific language governing permissions and limitations under the License.
+---  END LICENSE_HEADER BLOCK  ---
+%>
+<div class="row-fluid">
+  <div class="span2" id="left_column">
+    <%= render "ingest_steps" %>
+    <%= render "remove_item" %>
+  </div>
+  
+  <div id="main_body" class="span10">
+
+  <% if flash[:notice] %>
+    <div class="alert alert-info">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
+
+  <% if flash[:upload] and not flash[:error] %>
+    <div id="upload_format" class="alert active">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p class="notice"><%= flash[:upload] %></p>
+    </div>
+  <% end %>
+
+  <h5><span class="muted"><%= @mediaobject.collection.name.present? ? @mediaobject.collection.name : 'Untitled collection' %> > <%= @mediaobject.title.present? ? @mediaobject.title : 'Untitled item' %></span></h5>
+  <h3><%= HYDRANT_STEPS.get_step(@active_step).title %></h3>  
+  <%= render current_step_for @active_step %>
+  </div>
+</div>
+
+<% content_for :title do %>
+  <%# This might be a bit brittle but it is the fastest patch for the problem
+     and since we are all about efficiency right now it will work until there
+     is time to revisit the workflow %>
+  <%= HYDRANT_STEPS.get_step(@active_step).title %> -
+  <%= @mediaobject.title.present? ? truncate(@mediaobject.title, length: 50) : '[Untitled]' %> (<%= @mediaobject.pid %>)
+<% end %>

@@ -1,0 +1,4 @@
+<% # main container for facets/limits menu -%>
+<% facet_group_names.each do |groupname| %>
+  <%= render partial: "facet_group", locals: {groupname: groupname} %>
+<% end %>

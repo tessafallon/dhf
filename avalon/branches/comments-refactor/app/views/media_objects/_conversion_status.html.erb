@@ -1,0 +1,21 @@
+<!-- Run LINT on this later to clean up the formatting -->		
+<div id="workflow_status" class="alert">
+  <h4 class="alert-heading">Conversion status</h4>
+  <p id="file_status">
+    <% unless @mediaobject.parts.empty? %>
+      <dl class="nobullet status">
+        <% @mediaobject.parts.each do |file_asset| %>
+        <% # Refactor this in the future?
+           masterfile = MasterFile.find(file_asset.pid) %>
+        <dt>
+          <%= link_to file_download_label(masterfile),
+              edit_media_object_path(id: masterfile.container.pid, 
+                step: 'file-upload') %></dt>
+        <dd><%= masterfile.status %></dd>
+        <% end %>
+      </dl>
+    <% else %>
+      No file(s) have been loaded
+    <% end %>  
+  </p>
+</div>

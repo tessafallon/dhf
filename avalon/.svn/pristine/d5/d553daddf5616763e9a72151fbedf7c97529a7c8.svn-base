@@ -1,0 +1,48 @@
+<dl id="creation_metadata" class="dl-horizontal">
+  <dt>Title</dt>
+  <dd>
+    <% unless @video.descMetadata.title.empty? or
+      "" == @video.descMetadata.title.first %>
+      <%= @video.descMetadata.title.first %>
+    <% else %>
+      <em>Not provided</em>
+    <% end %>
+  </dd>
+
+  <dt>Creator</dt>
+  <dd>
+    <% unless @video.descMetadata.creator.empty? or
+      "" == @video.descMetadata.creator.first %>
+      <%= @video.descMetadata.creator.first %>
+    <% else %>
+      <em>Not provided</em>
+    <% end %>
+  </dd>
+
+  <% unless @video.descMetadata.format.nil? %>
+  <dt>Format</dt>
+  <dd><%= @video.descMetadata.format.first %></dd>
+  <% end %>
+
+  <dt>Date</dt>
+  <dd>
+    <% unless @video.descMetadata.created_on.empty? %>
+      <%= @video.descMetadata.created_on.first %>
+    <% else %>
+      <em>Not provided</em>
+    <% end %>
+  </dd>
+
+  <dt>Summary</dt>
+  <% unless @video.descMetadata.abstract.nil? or
+       @video.descMetadata.abstract.empty? %>
+    <dd><%= wrap_text(@video.descMetadata.abstract.first) %></dd>
+  <% else %>
+    <dd><em>No summary available</em></dd>
+  <% end %>
+  
+</dl>
+
+<% if can? :edit, @video %>
+  <%= link_to "Edit metadata", edit_video_path(@video, step: 'basic_metadata'), class: "btn" %>
+<% end %>

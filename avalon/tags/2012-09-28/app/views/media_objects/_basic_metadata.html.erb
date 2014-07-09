@@ -1,0 +1,48 @@
+<% if flash[:error] %><div class="alert alert-error"><%= flash[:error] %></div><% end %>
+
+<%= twitter_bootstrap_form_for @mediaobject, 
+    html: { 
+      class: "form-horizontal",
+      id: 'basic_metadata_form' } do |vid| %>
+  <%= hidden_field_tag :step, @active_step %>
+  <%= vid.fieldset "Required fields", id: 'required_fields' do %>    
+  
+    <%= vid.text_field :title, "Title", class: 'span12', value: @mediaobject.title %>
+    <%= vid.text_field :creator, "Creator", class: 'span12',
+      value: @mediaobject.creator %>
+    <%= vid.text_field :created_on, "Created on", class: 'span12',
+      value: @mediaobject.created_on %>
+    <%= vid.text_area :abstract, "Summary", class: 'span12', rows: 6,
+      value: @mediaobject.abstract %>
+  <% end %>
+  
+  <%= vid.fieldset "Related people", id: 'related_people' do %>
+    <%= vid.text_fields :contributor, "Contributor(s)", class: 'span12',
+      value: @mediaobject.contributor  %>
+    
+    <%= vid.text_fields :publisher, "Publisher(s)", class: 'span12',
+        value: @mediaobject.publisher, minimum_fields: 3  %>
+  <% end %>
+
+  <%# vid.fieldset "Related items", id: 'related_items' do %>    
+    <%# vid.text_fields :relatedItem, "--", class: 'span12', 
+      disabled: 'disabled', value: @mediaobject.relatedItem,
+      miminum_fields: 3 %>
+  <%# end %>
+  
+  <%= vid.fieldset "Keywords", id: 'keywords' do %>    
+    <%= vid.text_field :genre, "Genre", class: 'span12',
+      value: @mediaobject.genre %>
+    <%= vid.text_fields :temporal, "Time periods", class: 'span12', 
+       mininum_fields: 2, value: @mediaobject.temporal %>
+    <%= vid.text_fields :spatial, "Locations", class: 'span12', 
+       minimum_fields: 2, value: @mediaobject.spatial %>
+
+    <%= vid.text_fields :subject, "Subject(s)", class: 'span12', 
+       value: @mediaobject.subject %>
+  <% end %>
+
+ <%= vid.actions do |actions| %>
+      <%= render "workflow_buttons", form: vid %>
+  <% end %>
+<% end %>

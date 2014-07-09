@@ -1,0 +1,43 @@
+@import "branding";
+@import "bootstrap/variables";
+
+/**
+ * Tweak the modules so that there is some space between items in the
+ * definition lists
+ * 
+ * A little quick and dirty but it can be cleaned up later. Use 18px or the defined
+ * line height to keep things flowing nicely in the grid instead of arbitrary gaps
+ */
+.admin .badge, .admin .label {
+  font-size: $baseFontSize;
+  font-weight: normal;
+  margin-right: 4px;
+}
+
+.admin .icon-remove-sign, .admin .icon-ok-sign, .admin .icon-plus-sign {
+  font-size: $baseFontSize*1.5;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.admin .icon-remove-sign, .admin .icon-ok-sign, input[name="admin_group[users][]"], input[name="admin_group[resources][]"] {
+  display: none;
+}
+
+.noshow {
+  display: none;
+}
+
+.admin .badge .close {
+  float: none;
+  opacity: 0.6;
+  margin-top: -8px;
+}
+
+.float-left {
+  float: left;
+}
+
+.btn-group:last-of-type {
+  margin-right: 4px;
+}

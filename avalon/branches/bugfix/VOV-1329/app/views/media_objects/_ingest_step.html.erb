@@ -1,0 +1,10 @@
+<li class="<%= class_for_step(@mediaobject, step.step) %>"> 
+    <% if active %>
+      <%= link_to edit_media_object_path(@mediaobject, step: step.step) do %>
+        <%= step.title %>
+      <% end %>
+    <% else %>
+      <%= step.title %>
+    <% end %>
+    <p><%= step.summary %></p>
+</li>

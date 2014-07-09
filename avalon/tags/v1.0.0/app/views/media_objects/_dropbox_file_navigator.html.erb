@@ -1,0 +1,39 @@
+<% content_for(:page_styles)  { stylesheet_link_tag "datatables_bootstrap", media: "all" } %>
+<% content_for(:page_scripts) do %>
+  <%= javascript_include_tag "jquery.dataTables.min.js" %>
+  <%= javascript_include_tag "jquery.dataTables.bootstrap.js" %>
+  <%= javascript_include_tag "file_table", :defer => 'defer' %>
+<% end %>
+
+<% file_set ||= nil %>
+
+<% if file_set.nil? or file_set.empty? %>
+  <%= render "dropbox_empty_container" %>
+<% else %>
+  <%= hidden_field_tag :step, 'file-upload' %>
+  <%= hidden_field_tag :container_id, @mediaobject.pid %>
+    
+  <table id="file-list" class="table table-striped">
+    <colgroup>
+      <col class="span1">
+      <col class="span4">
+      <col class="span4">
+      <col class="span1">
+      <col class="span1">
+    </colgroup>
+  
+    <thead>
+      <th> <%= check_box_tag 'select_deselect_all' %> </th>
+      <th>File name</th>
+      <th>Size</th>
+      <th>Modified</th>
+      <th>Format</th>
+      <th>MIME type</th>
+    </thead>
+    <tbody>
+	    <% file_set.each do |file, i| %>
+        <%= render partial: "dropbox_file_entry", locals: {file: file, index: i} %>
+ 	 	  <% end %>
+ 	  </tbody>
+ 	</table>
+<% end %>

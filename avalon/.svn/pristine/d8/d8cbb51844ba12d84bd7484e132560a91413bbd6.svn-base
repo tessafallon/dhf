@@ -1,0 +1,29 @@
+<% if flash[:error] %><div class="alert alert-error"><%= flash[:error] %></div><% end %>
+<%= twitter_bootstrap_form_for @mediaobject, 
+      html: { 
+	class: "form-horizontal",
+    	id: 'access_control_form' } do |vid| %>
+    <%= hidden_field_tag :step, @active_step %>
+    <%= vid.fieldset "Access control", id: 'access_control' do %>    
+    <%= vid.hidden_field :pid %>
+
+    <%= label_tag :access do %>
+      <%= radio_button_tag :access, 'public', (@mediaobject.access == 'public') %>
+      This resource should be accessible to the general public without having to register
+    <% end %>
+
+    <%= label_tag :access do %>
+      <%= radio_button_tag :access, 'restricted', (@mediaobject.access == 'restricted') %>
+      Only registered users should have access to this resource
+    <% end %>
+
+    <%= label_tag :access do %>
+      <%= radio_button_tag :access, 'private', (@mediaobject.access == 'private') %>
+      Only I should be able to see this resource
+    <% end %>
+  
+    <%= vid.actions do |actions| %>
+      <%= render "workflow_buttons", form: vid %>
+    <% end %>
+  <%- end -%>
+<% end %>

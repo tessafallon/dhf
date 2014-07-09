@@ -1,0 +1,39 @@
+uva-only:
+  - uva-only
+  - test
+archivist:
+  - archivist1@example.com
+  - archivist2
+  - pdinh
+  - mnotess
+  - jwd
+  - rogersna
+  - cjcolvar
+  - jlhardes
+  - bhmarsha
+  - chris.colvard@gmail.com
+  - azielke@northwestern.edu
+  - michael.klein@northwestern.edu
+  - j-rudder@northwestern.edu
+  - stefanelnabli@northwestern.edu
+donor:
+  - donor1@example.com
+researcher:
+  - researcher1@example.com
+registered:
+  - pdinh
+  - rogersna
+  - cjcolvar
+admin_policy_object_editor:
+  - archivist1@example.com
+  - pdinh
+  - cjcolvar
+  - rogersna
+  - mnotess
+  - jwd
+  - jlhardes
+  - chris.colvard@gmail.com
+  - azielke@northwestern.edu
+  - michael.klein@northwestern.edu
+  - j-rudder@northwestern.edu
+  - stefanelnabli@northwestern.edu

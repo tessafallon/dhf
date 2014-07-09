@@ -1,0 +1,77 @@
+/* 
+ * Copyright 2011-2013, The Trustees of Indiana University and Northwestern
+ *   University.  Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ * 
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed 
+ *   under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ *   specific language governing permissions and limitations under the License.
+ * ---  END LICENSE_HEADER BLOCK  ---
+*/
+
+/**
+ * Custom branding for Avalon to override Bootstrap, Hydra, and Blacklight
+ * defaults. This should be included at the top of the application.scss file
+ * so it is preferred over the defaults. */
+$sansFontFamily: Arial, Helvetica, sans-serif;
+
+/**
+ * If you want to override the default color scheme do so here
+ *
+ * Bootstrap provides settings for
+ * blue
+ * red
+ * green
+ * yellow
+ * orange
+ * pink
+ * purple
+ * white
+ * black
+ * gray
+ */
+$green: rgb(128, 165, 144);
+$greenBG: scale-color($green, $saturation: -40%, $lightness: 60%);
+$white: rgb(255, 255, 255);
+$orange: rgb(42, 84, 69);
+$gray: rgb(51,51,51);
+
+/* Links */
+
+$linkColor: rgb(42, 84, 89);
+
+/* Alerts */
+
+$warningText: $gray;
+$warningBackground: rgb(234, 234, 234);
+
+$successText: $gray;
+$successLink: rgb(250, 250, 250);
+$successBackground: $greenBG;
+
+$infoText: $gray;
+$infoBackground: rgb(234, 234, 234);
+
+/* Header */
+
+$headerBackgroundColor: rgb(234, 234, 234);
+$headerTextColor: $white;
+$loginTextColor: $gray;
+$loginLinkColor: rgb(42, 84, 89);
+$loginLinkBackgroundColor: rgb(251, 176, 64);
+
+/* Sidenav */
+
+$sidenavHeaderBackgroundColor: $greenBG;
+
+/* Search Facets */
+$constraint_bg_color: $greenBG;
+$constraint_border_color: scale-color($greenBG, $lightness: -20%);
+
+/* Change default breakpoint for the navigation bar */
+$navCollapseWidth: 650px;

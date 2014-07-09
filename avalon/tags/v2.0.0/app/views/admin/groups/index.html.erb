@@ -1,0 +1,107 @@
+<%#
+Copyright 2011-2013, The Trustees of Indiana University and Northwestern
+  University.  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed 
+  under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+  specific language governing permissions and limitations under the License.
+---  END LICENSE_HEADER BLOCK  ---
+%>
+<div class="row span7">
+  <% if flash[:error] %><div class="alert alert-error"><%= flash[:error] %></div><% end %>
+
+  <h3>System Groups</h3>
+    <table class="table table-striped ">
+      <thead>
+        <tr>
+          <th>Group Name</th>
+          <th>Members#</th>
+          <!--<th>Ability</th>
+          <th>Resources#</th>-->
+        </tr>
+      </thead>
+      <tbody>
+        <% @default_groups.each do |group|%>
+          <tr>
+            <td><%= link_to_if can?(:manage, group), group.name, edit_admin_group_path(group) %></td>
+            <td><%= group.users.count %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <h3> Additional Groups</h3>
+
+  <%= form_tag(admin_groups_path) do -%>
+    <%= text_field_tag 'admin_group', nil, :placeholder => 'Enter group name here...' %> 
+    <%= submit_tag 'Create Group', class: "btn" %>
+  <% end -%>
+
+  <%= form_tag update_multiple_admin_groups_path, method: :put do %>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><input type="checkbox" class="select-groups"></th>
+          <th>Group Name</th>
+          <th>Members#</th>
+          <!--<th>Ability</th>
+          <th>Resources#</th>-->
+        </tr>
+      </thead>
+      <tbody>
+        <% @groups.each do |group|%>
+          <tr>
+            <td><%= check_box_tag "group_ids[]", group.name %></td>
+            <td><%= link_to group.name, edit_admin_group_path(group) %></td>
+            <td><%= group.users.count %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= submit_tag "Delete Groups", method: :delete, confirm: "Deleted groups cannot be recovered. Are you sure?", 
+        class: "btn btn-danger delete", disabled: true %>
+  <% end %>
+
+</div>
+
+<% content_for :page_scripts do %>
+  <script>
+    $('.close').click(function(){
+      $(this).parent().remove();
+    })
+  
+    $('.select-groups').change(function(){
+      $('input[id^=group_ids_]').prop('checked', $(this).is(':checked')).trigger('change');
+    })
+  
+    $('input[id^=group_ids_]').change(function(){
+      if ($(this).is(':checked')) {
+        enableButtons();
+      } else if ($(':checked').length == 0) {
+        disableButtons();
+      }
+    })
+  
+    function enableButtons() {
+      $('#add-ability').removeClass('disabled');
+      $('#remove-ability').removeClass('disabled');    
+      $('.delete').removeAttr('disabled');
+    }
+
+    function disableButtons() {
+      $('#add-ability').addClass('disabled');
+      $('#remove-ability').addClass('disabled');    
+      $('.delete').attr('disabled', 'disabled');
+    }
+  </script>
+<% end %>
+
+<% content_for :title do %>Avalon Policy Manager<% end %>

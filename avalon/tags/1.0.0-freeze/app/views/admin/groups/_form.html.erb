@@ -1,0 +1,66 @@
+<style>
+  .inline-children > div { display: inline }
+</style>
+
+<% if flash[:error] %><div class="alert alert-error"><%= flash[:error] %></div><% end %>
+
+<%= twitter_bootstrap_form_for @group, html: { :class => 'form-inline'}  do |f| %>
+    <h3>Group</h3>
+    <%= text_field_tag :group_name, "Group name", value: @group.name %>
+    <%= submit_tag "Save", class: "btn" %>
+    <%= link_to "Delete Group", admin_group_path(@group.name), 
+        :method => :delete, confirm: "Deleted group cannot be recovered. Are you sure?", class: "btn btn-danger inline" %>
+
+    <h3 style="margin-top: 35px">Group Members</h3>
+    <%= text_field_tag :new_user, nil, placeholder: 'Enter an username here' %>
+    <%= f.submit "Add user", class: "btn" %>
+<% end %>
+
+<%= form_tag update_users_admin_group_path, method: :put do %>
+    <div style="line-height: 22px">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><input type="checkbox" class="select-groups"></th>
+            <th>Username</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @group.users.each do |user| %>
+            <tr>
+              <td><%= check_box_tag "user_ids[]", user %></td>
+              <td><%= user %></td>
+              <td></td>
+            </tr>
+           <% end %>
+         </tbody>
+      </table>
+    </div>
+    <%= hidden_field_tag 'id', @group.name %>
+    <%= submit_tag "Remove members", :method => :delete, class: "btn btn-danger delete", disabled: true  %>    
+<% end %>
+
+<% content_for :page_scripts do %>
+  <script>
+    $('.select-groups').change(function(){
+      $('input[id^=user_ids_]').prop('checked', $(this).is(':checked')).trigger('change');
+    })
+  
+    $('input[id^=user_ids_]').change(function(){
+      if ($(this).is(':checked')) {
+        enableButtons();
+      } else if ($(':checked').length == 0) {
+        disableButtons();
+      }
+    })
+  
+    function enableButtons() {
+      $('.delete').removeAttr('disabled');
+    }
+
+    function disableButtons() {
+      $('.delete').attr('disabled', 'disabled');
+    }
+  </script>
+<% end %>

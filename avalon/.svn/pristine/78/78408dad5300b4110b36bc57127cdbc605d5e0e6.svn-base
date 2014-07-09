@@ -1,0 +1,58 @@
+<div class="row-fluid">
+  <div class="span12">
+    <div class="well">
+    <h3><%= @collection.name %></h3>
+    <p> <strong>Description:</strong> <%= @collection.description %> </p>
+    <p> <strong>Unit:</strong> <%= @collection.unit %> </p>
+    <%= link_to('Create an Item', new_media_object_path(collection_id: @collection.pid), class: 'btn btn-primary') if can? :create, MediaObject %>
+    <%= link_to('List all Items', catalog_index_path('f[collection_ssim][]' => @collection.name), class: 'btn') %>
+    <%= link_to('Edit Collection', edit_admin_collection_path(@collection), class: 'btn', remote: true, modal: true) if can? :update, @collection %>
+    </div>
+
+    <%= twitter_bootstrap_form_for @collection, html: { class: "form-horizontal", id: 'access_control_form'}  do |co| %>
+
+      <%= co.fieldset 'Members' do %>
+
+          <% if flash[:notice] %>
+            <div class="alert alert-error span9">
+              <a href="#" class="close" data-dismiss="alert">&times;</a>
+              <%= flash[:notice] %>
+            </div>
+          <% end %>
+
+        <div class="span3">
+          <p>Managers</p>
+          <%= render "manage_members", title: "manager" %>
+        </div>
+
+        <div class="span3">
+          <p>Editors</p>
+          <%= render "manage_members", title: "editor" %>
+        </div>
+
+        <div class="span3">
+          <p>Depositors</p>
+          <%= render "manage_members", title: "depositor" %>
+        </div>
+
+      <% end %>
+
+      <div class="whitespace"></div>
+
+      <%= co.fieldset 'Default Access Control for New Items' do %>
+        <div class="span10">
+          <%= render "modules/access_control", { form: co, object: @collection, access: @collection.default_access, hidden: @collection.default_hidden? } %>	
+
+          <%= submit_tag "Save Access Settings", name: "save_access", class: "btn" %>
+        </div>
+      <% end %>
+      
+    <% end %>
+  </div>
+</div>
+
+<% content_for :page_scripts do %>
+  <script>
+    new ModalLogic()
+  </script>
+<% end %>

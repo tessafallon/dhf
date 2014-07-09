@@ -1,0 +1,59 @@
+<%#
+Copyright 2011-2013, The Trustees of Indiana University and Northwestern
+  University.  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed 
+  under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+  specific language governing permissions and limitations under the License.
+---  END LICENSE_HEADER BLOCK  ---
+%>
+<% unless devise_error_messages!.empty? %>
+  <div class="alert alert-error">There were errors completing your registration.</div>
+<% end %>
+
+<h2>Create an account</h2>
+<%= form_for(resource, :as => resource_name, 
+  :url => registration_path(resource_name), 
+  html: {class: "form-horizontal"}) do |f| %>
+
+  <div class="control-group <% if resource.errors.include?(:email) %>error<% end %>">
+    <div class="control-label">
+      <%= f.label :email %>
+      <% if resource.errors.include?(:email) %><p class="help-block"><%= resource.errors[:email] %></p><% end %>
+    </div>
+    <div class="controls"><%= f.email_field :email %></div>
+  </div>
+
+  <div class="control-group <% if resource.errors.include?(:password) %>error<% end %>">
+    <div class="control-label">
+      <%= f.label :password %>
+    </div>
+    <div class="controls">
+      <%= f.password_field :password %>
+      <% if resource.errors.include?(:password) %>
+        <% resource.errors[:password].each do |error| %>
+          <p class="help-block"><%= error %></p>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="control-group <% if resource.errors.include?(:password) %>error<% end %>">
+    <div class="control-label">
+      <%= f.label :password_confirmation %>
+    </div>
+     <div class="controls"><%= f.password_field :password_confirmation %></div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls"><%= f.submit "Sign up", class: "btn" %></div>
+  </div>
+<% end %>
+
+<%= render :partial => "devise/shared/links" %>

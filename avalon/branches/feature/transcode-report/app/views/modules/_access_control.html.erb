@@ -1,0 +1,58 @@
+<%#
+Copyright 2011-2013, The Trustees of Indiana University and Northwestern
+  University.  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed 
+  under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+  specific language governing permissions and limitations under the License.
+---  END LICENSE_HEADER BLOCK  ---
+%>
+  <%= form.fieldset 'Item discovery' do %>
+    <% if can? :update_access_control, object %>
+      <%= label_tag :hidden do %>
+        <%= check_box_tag 'hidden', '1', hidden %>
+        Hide this item from search results 
+      <% end %>
+    <% else %>
+      <%= hidden ? "Item is hidden from search results" : 
+        "Item is not hidden from search results" %>
+    <% end %>
+  <% end %>
+    
+  <%= form.fieldset 'Item access' do %>
+    <% if can? :update_access_control, object %>
+      <%= form.hidden_field :pid %>
+
+      <%= label_tag :visibility do %>
+      <%= radio_button_tag :visibility, 'public', (@visibility == 'public') %>
+        Available to the general public
+      <% end %>
+
+      <%= label_tag :visibility do %>
+      <%= radio_button_tag :visibility, 'restricted', (@visibility == 'restricted') %>
+        Logged in users only
+      <% end %>
+
+      <%= label_tag :visibility do %>
+      <%= radio_button_tag :visibility, 'private', (@visibility == 'private') %>
+        Collection staff only
+      <% end %>
+    
+  <% end %> 
+  <%= form.fieldset 'Assign special access' do %>
+    <div class="row-no-margin">
+      <%= render "modules/access_object", object: object,
+        access_object: "user", members: @users, autocomplete_model: 'user' %>
+      <%= render "modules/access_object", object: object,
+        access_object: "group", members: @groups, dropdown_values: [@addable_groups, 'name', 'name'] %>
+      <%= render "modules/access_object", object: object,
+        access_object: "class", members: @virtual_groups, autocomplete_model: 'course', display_helper: :vgroup_display %>
+    </div>
+  <% end %>
+<% end %>

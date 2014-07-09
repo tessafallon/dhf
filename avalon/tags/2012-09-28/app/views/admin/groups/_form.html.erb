@@ -1,0 +1,107 @@
+<style>
+  #admin_group_resources_control_group  { display : none }
+</style>
+
+<% if flash[:error] %><div class="alert alert-error"><%= flash[:error] %></div><% end %>
+
+<%= twitter_bootstrap_form_for @group,class: 'form-vertical' do |f| %>
+  <%= f.fieldset do %>
+    <%= f.text_field :name, "Name", class: 'span4', value: @group.name %>
+
+    <%= f.label :users, "Users" do |controls| %> 
+      <div style="line-height: 22px">
+        <span class="noshow counter"><%= @group.users.nil? ? 0 : @group.users.count %></span>
+        <% @group.users.each_with_index do |user, index| %>
+          <%= text_field_tag "#{f.object_name}[users][]", user, class: "noshow", id: "#{f.object_name}_user_#{index}" %>
+          <span class="badge">
+            <span>
+              <%= user %>
+            </span>
+            <button class="close remove">&times;</button>
+          </span>
+        <% end %>
+
+        <input name="admin_group[users][]" class="new-input" id="admin_group_user_">
+        <i class="icon-ok-sign"></i>
+        <i class="icon-remove-sign"></i>
+        <i class="icon-plus-sign"></i>
+      </div>
+    <% end %>
+    
+    <%= f.label :resources, "Resources" do |controls| %> 
+      <div style="line-height: 22px">
+        <span class="noshow counter"><%= @group.resources.nil? ? 0 : @group.resources.count %></span>
+        <% @group.resources.each_with_index do |resource, index| %>
+          <%= text_field_tag "#{f.object_name}[resources][]", resource, class: "noshow", id: "#{f.object_name}_resource_#{index}" %>
+          <span class="badge">
+            <%= resource %>
+            <button class="close remove">&times;</button>
+          </span>
+        <% end %>
+
+        <input name="admin_group[resources][]" class="new-input" id="admin_group_resource_">
+        <i class="icon-ok-sign"></i>
+        <i class="icon-remove-sign"></i>
+        <i class="icon-plus-sign"></i>
+      </div>
+    <% end %>
+    
+    <%= f.submit "Save" %>
+  <% end %>
+<% end %>
+
+<% content_for :page_scripts do %>
+  <script>
+    $('.close.remove').live('click', function(){
+      $(this).parent().prev().remove();
+      $(this).parent().remove();
+      return false;
+    })
+  
+    $('.new-input').keypress(function(e) {
+      if (e.which == 13) {
+        $(this).parent().find('.icon-ok-sign').trigger('click');
+        e.preventDefault();
+      }
+    })
+
+    // Adds new user
+    $('.icon-plus-sign').click(function(){
+      toggleIcons($(this));
+      $(this).parent().find('.new-input').focus();
+    })
+
+    // Saves new user
+    // TODO: cleaner cloning
+    $('.icon-ok-sign').click(function(){
+      var newInput = $(this).parent().find('.new-input');
+      var counter = $(this).parent().find('.counter');
+      var input = newInput.val();
+    
+      if (input.length > 0) {
+        var numUsrs = parseInt(counter.val());
+        var usrHiddenInput = newInput.clone(false).attr('id', newInput.attr('id') + numUsrs).removeClass('new-input');
+
+        newInput.before(usrHiddenInput.hide());
+        newInput.before('<span class="badge"><span>' + input + '</span><button class="close remove">&times;</button></span>');
+        newInput.val('');
+        counter.val(numUsrs + 1);
+      }
+      toggleIcons($(this));
+    })
+
+    // Cancels adding user
+    $('.icon-remove-sign').click(function(){
+      $(this).parent().find('.new-input').val('');
+      toggleIcons($(this));
+    })
+  
+    // Toggles the controls set with each action
+    function toggleIcons(caller){
+      caller.parent().find('.icon-ok-sign').toggle(); 
+      caller.parent().find('.icon-remove-sign').toggle();
+      caller.parent().find('.icon-plus-sign').toggle();
+      caller.parent().find('.new-input').toggle();   
+    }
+  </script>
+<% end %>

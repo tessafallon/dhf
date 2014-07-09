@@ -1,0 +1,118 @@
+<% if flash[:error] %>
+  <div class="alert alert-error"><%= flash[:error] %></div>
+<% end %>
+
+<legend>Structure</legend>
+<p>Drag files to reorder them. Changes will be saved to the database immediately if Javascript is enabled.</p>
+
+<% if @masterFiles.blank? %>
+  <div class="well">There are no media files</div>
+<% else %>
+	<table class="table table-striped">
+	<thead>
+	  <th></th>
+	  <th>Type</th>
+	  <th>Title</th>
+	  <th>File name</th>
+	  <th>Size</th>
+	</thead>
+	<tbody class="sortable">
+		<% @masterFiles.each do |masterfile| %>
+      <tr>
+		<td>
+			<div class="noshow">
+				<i class="icon-arrow-up"></i>
+				<i class="icon-arrow-down"></i> 
+			</div>
+		</td>
+        <td>
+                          <% case masterfile.media_type.first
+                             when 'Sound' %>
+                               <i class="icon-volume-up"></i>
+                          <% when 'Moving image' %>
+                               <i class="icon-film"></i>
+                          <% else %>
+                               <i class="icon-question-sign"></i>
+                          <% end %>
+        </td>
+        <td>
+          <%= text_field_tag masterfile.pid, masterfile.label, class: 'mf-label' %>
+        </td>
+        <td>
+	  	    <a href="<%= masterfile.descMetadata.identifier[0] %>"><%= File.basename(masterfile.url.first)  %></a>
+	  	  </td>
+	  	  <td><%= number_to_human_size(masterfile.size.first) %></td>
+	 	    </tr>
+	 	  <% end %>
+	  </tbody>
+	</table>
+
+<% end %>
+
+<div class="row-fluid">
+  <div class="span12">
+    <%= twitter_bootstrap_form_for @mediaobject, html: { class: "form-horizontal"} do |vid| %>
+      <%= render "workflow_buttons", form: vid %>
+    <% end %>		
+  </div>
+</div>
+
+<% content_for :page_scripts do %>
+  <script>
+    /* Hide the alert dialog on the page loading if Javascript is enabled */
+    <% unless flash[:upload] %>$('#upload_format').hide();<% end %>
+
+	  $('.sortable').sortable({ 
+			disabled: false,
+			update: function(e, ui) {
+				var mfs = [];
+				$(this).find('.mf-label').each(function(){
+					mfs.push($(this).attr('id'));
+				})
+				$.ajax({
+					type: 'PUT',
+					url: '<%= media_object_path(@mediaobject) %>',
+					data: { _method: 'update', masterfile_ids: mfs, step: '<%= @active_step %>', donot_advance: 'true', format: 'json' },
+				success: function(data) {
+					// Do nothing for now
+				}
+				})
+			}
+		});
+	  $('.sortable').disableSelection();
+		$('.sortable').css('cursor', 'move');
+
+    $('.sequence-btn').click(function(){
+      $('.sortable').sortable({ disabled: false });
+      $('.sortable').disableSelection();
+
+      toggleBtns($(this));
+    })
+      
+    $('.version-btn').click(function(){
+      $('.sortable').sortable({ disabled: true });
+      $('.sortable').css('cursor', 'auto');
+      toggleBtns($(this));
+    })
+      
+    function toggleBtns(btn) {
+      $('.btn-group .btn').removeClass('btn-success');
+      btn.addClass('btn-success');
+    }
+  
+    $(".sortable").nestedSortable({
+      placeholder: 'dropPlaceHolder',
+      forcePlaceholderSize:true,
+      handle: 'div',
+      helper: 'clone',
+      listType: 'tbody',
+      items: 'tr',
+      opacity: .6,
+      revert: 250,
+      tabSize: 25,
+      tolerance: 'pointer',
+      toleranceElement: '> div'
+    }).disableSelection();
+  </script>
+<% end %>
+

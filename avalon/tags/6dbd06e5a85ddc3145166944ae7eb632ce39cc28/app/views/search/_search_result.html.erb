@@ -1,0 +1,25 @@
+<li class="span3">
+  <div class="thumbnail search-result">
+    <%= image_for_result(item) %>
+     
+    <div class="caption">
+        <h4 class="title">
+          <% if can? :read, item %>
+            <%= link_to search_result_label(item), video_path(item[:id]) %> 
+          <% else %>
+            <%= search_result_label(item) %>)
+          <% end %>
+        </h4>
+      <% unless item["creator_t"].nil? or item["creator_t"].empty? %>
+        <p class="creator"><%= item["creator_t"].first %></p></h4>
+      <% end %>
+
+      <% unless item["abstract_t"].nil? or 
+         item["abstract_t"].empty? %>
+        <p class="summary"><%= truncate(item["abstract_t"].first, 
+          length: 75) %></p>
+      <% else %>
+        <p class="summary">No summary available</p>
+      <% end %>
+  </div>
+</li>

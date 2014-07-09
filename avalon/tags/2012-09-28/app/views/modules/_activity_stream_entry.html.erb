@@ -1,0 +1,21 @@
+<% # Write a helper method to handle this logic since it will be repeated
+   # in other places %>
+<% unless item.nil? %>
+<dt>
+  <% if can? :read, item %>
+    <%= link_to(item) do %> 
+    <% unless item.title.blank? %><%= item.title %><% else %>No title provided<% end%> (<%= item.pid %>)
+    <% end %>
+  <% else %>
+      <% unless item.title.blank? %><%= item.title %><% else %>No title provided<% end%> (<%= item.pid %>)
+  <% end %>
+</dt>
+<dd class="whitespace">
+  <!-- Need to shorten the asbtract if it is too long -->
+  <% unless not item.abstract.blank? %>
+    <%= truncate(item.abstract, length: 120) %>
+  <% else %>
+    <em>No summary available</em>
+  <% end %>
+</dd>
+<% end %>
