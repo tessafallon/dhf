@@ -1,3 +1,8 @@
+THIS IS A MODIFICATION OF THE AVALON MEDIA SYSTEM.  The version in this repo is customized for a particular use, and is not suitable for production or installation at this time.  For more about the Avalon system, see the text below my signature.
+
+--Tessa
+
+
 # Avalon Media System
 [Avalon Media System](http://www.avalonmediasystem.org) is an open source system for managing large collections of digital audio and video. The project is led by the libraries of [Indiana University](http://www.iu.edu) and [Northwestern University](http://www.northwestern.edu) with funding in part by a three-year National Leadership Grant from the [Institute of Museum and Library Services](http://www.imls.gov).
 
